@@ -42,7 +42,7 @@ proc error_proto(msg: string): ref IOError =
 
 
 type
-  POP3Client = ref object of RootObj
+  POP3Client* = ref object of RootObj
     greeting_banner: string
     host: string
     port: Port
@@ -55,11 +55,15 @@ proc get_resp(self: POP3Client): POP3Response
 
 proc connect(self: POP3Client, host:string, port:Port, use_ssl=true) =
   self.sock = newSocket()
+  when not defined(ssl):
+    if use_ssl:
+      raise newException(Exception, "SSL support required")
+
   if use_ssl:
     logging.debug "connecting with SSL to $#:$#" % [$host, $port]
-    when not defined(ssl):
-      raise Exception("SSL support required")
-    defaultSSLContext.wrapSocket(self.sock)
+
+    when defined(ssl):
+      defaultSSLContext.wrapSocket(self.sock)
 
   else:
     logging.debug "connecting without SSL to $#:$#" % [$host, $port]
@@ -190,7 +194,7 @@ proc uidl*(self: POP3Client, msg_num: int): POP3Response =
   ## UIDL, return message digest
   return self.short_cmd("UIDL $#" % $msg_num)
 
-proc list_uidl*(self: POP3Client): tuple =
+proc list_uidl*(self: POP3Client): POP3Response =
   ## UIDL, return message digests
   return self.long_cmd("UIDL")
 

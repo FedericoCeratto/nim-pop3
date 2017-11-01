@@ -114,13 +114,13 @@ proc get_long_resp(self: POP3Client): POP3Response  =
 
   logging.debug "long resp: $#" % [$result.status]
 
-proc short_cmd(self: POP3Client, line): POP3Response =
+proc short_cmd(self: POP3Client, line: string): POP3Response =
   logging.debug "short cmd: '$#'" % line
   self.sock.send(line)
   self.sock.send(CRLF)
   return self.get_resp()
 
-proc long_cmd(self: POP3Client, line): POP3Response =
+proc long_cmd(self: POP3Client, line: string): POP3Response =
   logging.debug "long cmd: '$#'" % line
   self.sock.send(line)
   self.sock.send(CRLF)

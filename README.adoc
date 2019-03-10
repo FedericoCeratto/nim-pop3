@@ -1,10 +1,15 @@
-### nim-pop3
+
+=== pop3
+
+image:https://img.shields.io/github/tag/FedericoCeratto/nim-pop3.svg[tags]
+image:https://img.shields.io/badge/License-LGPL%20v3-blue.svg[License]
 
 Nim POP3 client library
 
-Usage:
+==== Usage
 
-``` nim
+[source,nim]
+----
 import pop3
 import logging
 import net  # used for .Port
@@ -37,5 +42,5 @@ let caps = c.capa()
 
 c.rset()
 c.quit()
-```
+----
 
